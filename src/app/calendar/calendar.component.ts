@@ -2,6 +2,7 @@ import { getLocaleMonthNames } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { faAngleLeft, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { CalendarModel } from './calendar.model';
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
@@ -35,8 +36,10 @@ export class CalendarComponent implements OnInit {
   isSelected:boolean = false;
   selectedDay;
   date = new Date();
+ 
+  day: CalendarModel[]=[];
   
-  nowDay;
+
   // Şu anki ayı ve günü ekrana yazdırmak
   currentMonth = this.months[this.date.getMonth()]
   currentDay = this.date.getDate();
@@ -55,16 +58,19 @@ export class CalendarComponent implements OnInit {
   lastDayIndex= new Date(this.date.getFullYear(),this.date.getMonth()+1,0).getDay();
 
   nextDays= 8 - this.lastDayIndex - 1;
+
+  nowDay = new Date(this.date.getFullYear(),this.date.getMonth(),this.date.getDate())
   
   
 
   constructor() { }
 
   ngOnInit(): void {
-    
 
+    
+    
     for(let x=this.firstDayIndex;x>0;x--){
-      this.days.push(this.prevlastDay-x+1)
+      this.day.push("prev-date",this.prevlastDay-x+1)
       // this.prevDays.push(this.prevlastDay-x+1)
     }
     
@@ -72,11 +78,11 @@ export class CalendarComponent implements OnInit {
       // if(i === new Date().getDate() && this.date.getMonth() === new Date().getMonth()){
 
       // }
-      this.days.push(i)
+      this.day.push("rest-of",i)
     }
 
     for(let j=1;j <= this.nextDays;j++){
-      this.days.push(j);
+      this.day.push('next-date',j);
     }
     
     
@@ -86,25 +92,29 @@ export class CalendarComponent implements OnInit {
   prevMonth(){
     this.date.setMonth(this.date.getMonth()-1);
     this.currentMonth = this.months[this.date.getMonth()]
-    if(this.currentMonth === 'December'){
+    if(this.currentMonth === 'December' ){
       this.currentYear = this.date.getFullYear();
+
+    }else{
+      this.currentDay = new Date(this.date.getFullYear(),this.date.getMonth()+1,1).getDate()
+      
     }
   }
 
   nextMonth(){
     this.date.setMonth(this.date.getMonth()+1);
     this.currentMonth = this.months[this.date.getMonth()]
-    if(this.currentMonth === 'January'){
+    if(this.currentMonth === 'January' ){
       this.currentYear = this.date.getFullYear();
+      
+    }else{
+      
+        this.currentDay = new Date(this.date.getFullYear(),this.date.getMonth()-1,1).getDate()
+      
     }
   }
 
-  isCurrent(day){
-    if(day === this.date.getDate()){
-      day = this.currentDay
-    }
-  }
-
+  
 
   onClicked(day){
     this.isSelected= true
