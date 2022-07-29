@@ -70,7 +70,7 @@ export class CalendarComponent implements OnInit {
     
     
     for(let x=this.firstDayIndex;x>0;x--){
-      this.day.push("prev-date",this.prevlastDay-x+1)
+      this.days.push(this.prevlastDay-x+1)
       // this.prevDays.push(this.prevlastDay-x+1)
     }
     
@@ -78,11 +78,11 @@ export class CalendarComponent implements OnInit {
       // if(i === new Date().getDate() && this.date.getMonth() === new Date().getMonth()){
 
       // }
-      this.day.push("rest-of",i)
+      this.days.push(i)
     }
 
     for(let j=1;j <= this.nextDays;j++){
-      this.day.push('next-date',j);
+      this.days.push(j);
     }
     
     
