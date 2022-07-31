@@ -101,8 +101,8 @@
     cursor: pointer;
 }
 
-.prev-date,
-.next-date{
+.prev,
+.after{
     opacity: 0.5;
 }
 

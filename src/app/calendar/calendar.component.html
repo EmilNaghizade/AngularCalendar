@@ -18,7 +18,14 @@
             <div>Su</div>
         </div>
         
-        <div  (click)="onClicked($event)" class="days" *ngFor="let item of days">{{item}}</div>
+        <div  (click)="onClicked(item.date)" class="days"
+        [class.prev]="item.type === 'prev'"
+            [class.now]="item.type === 'now'"
+            [class.after]="item.type === 'after'"
+            [class.today]="item.date === selectedDate"
+        *ngFor="let item of days">
+        {{item.day}}
+        </div>
             
             
             <!-- <div class="prev-date">27</div>

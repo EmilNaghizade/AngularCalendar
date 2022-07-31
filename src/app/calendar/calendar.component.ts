@@ -1,5 +1,5 @@
-import { getLocaleMonthNames } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { DatePipe, getLocaleMonthNames } from '@angular/common';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { faAngleLeft, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { CalendarModel } from './calendar.model';
@@ -12,6 +12,9 @@ export class CalendarComponent implements OnInit {
   // Font Awesome
   faAngleLeft = faAngleLeft;
   faAngleRight = faAngleRight;
+
+  @Output() change =  new EventEmitter<any>();
+  
 
   // Month Array
   months:any[] = [
@@ -31,46 +34,68 @@ export class CalendarComponent implements OnInit {
   
   
   m:any;
-  days:number[]=[];
-  prevDays: number[]=[];
+  days:CalendarModel[]=[];
   isSelected:boolean = false;
   selectedDay;
   date = new Date();
- 
-  day: CalendarModel[]=[];
   
 
   // Şu anki ayı ve günü ekrana yazdırmak
-  currentMonth = this.months[this.date.getMonth()]
-  currentDay = this.date.getDate();
-  currentYear = this.date.getFullYear();
+  currentMonth;
+  currentDay:number;
+  currentYear:number;
   
   // Bu ayın sonuncu gününü almak 
-  lastDay = new Date(this.date.getFullYear(),this.date.getMonth()+1,0).getDate();
+  lastDay:number;
   
   // Önceki ayın sonuncu gününü almak 
-  prevlastDay = new Date(this.date.getFullYear(),this.date.getMonth(),0).getDate();
+  prevlastDay:number;
 
   // Haftanın hangi günü olduğunu anlamak 
-  firstDayIndex= this.date.getDay();
+  firstDayIndex:number;
 
   // 
-  lastDayIndex= new Date(this.date.getFullYear(),this.date.getMonth()+1,0).getDay();
+  lastDayIndex:number;
 
-  nextDays= 8 - this.lastDayIndex - 1;
+  nextDays:number;
 
-  nowDay = new Date(this.date.getFullYear(),this.date.getMonth(),this.date.getDate())
+  nowDay:Date;
   
+  selectedDate: Date|null = null;
   
 
   constructor() { }
 
   ngOnInit(): void {
+    this.renderCalendar();
+  }
 
+  renderCalendar() {
+    this.days = []; 
+    this.date.setDate(1);
     
-    
+  // Şu anki ayı ve günü ekrana yazdırmak
+  this.currentMonth = this.months[this.date.getMonth()]
+  this.currentDay = this.date.getDate();
+  this.currentYear = this.date.getFullYear();
+  
+  // Bu ayın sonuncu gününü almak 
+  this.lastDay = new Date(this.date.getFullYear(),this.date.getMonth()+1,0).getDate();
+  
+  // Önceki ayın sonuncu gününü almak 
+  this.prevlastDay = new Date(this.date.getFullYear(),this.date.getMonth(),0).getDate();
+
+  // Haftanın hangi günü olduğunu anlamak 
+  this.firstDayIndex= this.date.getDay()-1;
+
+  // 
+  this.lastDayIndex= new Date(this.date.getFullYear(),this.date.getMonth()+1,0).getDay();
+
+  this.nextDays= 8 - this.lastDayIndex-1;
+
+  this.nowDay = new Date(this.date.getFullYear(),this.date.getMonth(),this.date.getDate())
     for(let x=this.firstDayIndex;x>0;x--){
-      this.days.push(this.prevlastDay-x+1)
+      this.days.push(new CalendarModel('prev', this.prevlastDay-x+1,new Date(this.date.getFullYear(),this.date.getMonth()-1, this.prevlastDay-x+1)))
       // this.prevDays.push(this.prevlastDay-x+1)
     }
     
@@ -78,15 +103,14 @@ export class CalendarComponent implements OnInit {
       // if(i === new Date().getDate() && this.date.getMonth() === new Date().getMonth()){
 
       // }
-      this.days.push(i)
+      this.days.push(new CalendarModel('now', i,new Date(this.date.getFullYear(),this.date.getMonth(),i)))
     }
 
-    for(let j=1;j <= this.nextDays;j++){
-      this.days.push(j);
+      for(let j=1;j <= this.nextDays;j++){
+        if (this.days.length % 7 > 0) {
+        this.days.push(new CalendarModel('after', j, new Date(this.date.getFullYear(),this.date.getMonth()+1,j)))
+      }
     }
-    
-    
-
   }
 
   prevMonth(){
@@ -99,6 +123,7 @@ export class CalendarComponent implements OnInit {
       this.currentDay = new Date(this.date.getFullYear(),this.date.getMonth()+1,1).getDate()
       
     }
+    this.renderCalendar();
   }
 
   nextMonth(){
@@ -112,16 +137,15 @@ export class CalendarComponent implements OnInit {
         this.currentDay = new Date(this.date.getFullYear(),this.date.getMonth()-1,1).getDate()
       
     }
+    this.renderCalendar();
   }
 
   
 
-  onClicked(day){
-    this.isSelected= true
-    var target = day.target
-    if(this.isSelected===true){
-      alert("You select "+ target.innerHTML+ " " +this.currentMonth)
-    }
+  onClicked(day:Date){
+    this.selectedDate = day;
+    alert("You select " +new DatePipe('en').transform(day)  )
+    this.change.emit(day);
   }
   
 

@@ -5,12 +5,14 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CalendarComponent } from './calendar/calendar.component';
+import { TahsinComponent } from './tahsin/tahsin.component';
  
 
 @NgModule({
   declarations: [
     AppComponent,
-    CalendarComponent
+    CalendarComponent,
+    TahsinComponent
   ],
   imports: [
     BrowserModule,
