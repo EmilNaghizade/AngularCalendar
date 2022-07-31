@@ -6,13 +6,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { TahsinComponent } from './tahsin/tahsin.component';
+import { DirectiveDirective } from './directive/directive.directive';
  
 
 @NgModule({
   declarations: [
     AppComponent,
     CalendarComponent,
-    TahsinComponent
+    TahsinComponent,
+    DirectiveDirective
   ],
   imports: [
     BrowserModule,
