@@ -63,88 +63,83 @@ export class CalendarComponent implements OnInit {
   
   selectedDate: Date|null = null;
   
-
-  constructor() { }
+  ccurrentDate: number
+  ccurrentMonth
+  ccurrentYear
+  constructor() { 
+    this.ccurrentDate = this.date.getDate()
+    this.ccurrentMonth = this.months[this.date.getMonth()]
+    this.ccurrentYear = this.date.getFullYear()
+  }
 
   ngOnInit(): void {
     this.renderCalendar();
   }
-
+   
   renderCalendar() {
     this.days = []; 
     this.date.setDate(1);
     
-  // Şu anki ayı ve günü ekrana yazdırmak
-  this.currentMonth = this.months[this.date.getMonth()]
-  this.currentDay = this.date.getDate();
-  this.currentYear = this.date.getFullYear();
+    // Şu anki ayı ve günü ekrana yazdırmak
+    this.currentMonth = this.months[this.date.getMonth()]
+    this.currentDay = this.date.getDate();
+    this.currentYear = this.date.getFullYear();
   
-  // Bu ayın sonuncu gününü almak 
-  this.lastDay = new Date(this.date.getFullYear(),this.date.getMonth()+1,0).getDate();
-  
-  // Önceki ayın sonuncu gününü almak 
-  this.prevlastDay = new Date(this.date.getFullYear(),this.date.getMonth(),0).getDate();
+    // Bu ayın sonuncu gününü almak 
+    this.lastDay = new Date(this.date.getFullYear(),this.date.getMonth()+1,0).getDate();
+    
+    // Önceki ayın sonuncu gününü almak 
+    this.prevlastDay = new Date(this.date.getFullYear(),this.date.getMonth(),0).getDate();
 
-  // Haftanın hangi günü olduğunu anlamak 
-  this.firstDayIndex= this.date.getDay()-1;
+    // Haftanın hangi günü olduğunu anlamak 
+    this.firstDayIndex= this.date.getDay()-1;
 
-  // 
-  this.lastDayIndex= new Date(this.date.getFullYear(),this.date.getMonth()+1,0).getDay();
+    this.lastDayIndex= new Date(this.date.getFullYear(),this.date.getMonth()+1,0).getDay();
 
-  this.nextDays= 8 - this.lastDayIndex-1;
+    this.nextDays= 8 - this.lastDayIndex-1;
 
-  this.nowDay = new Date(this.date.getFullYear(),this.date.getMonth(),this.date.getDate())
+    this.nowDay = new Date(this.date.getFullYear(),this.date.getMonth(),this.date.getDate())
+
+    //Önceki ayın günlerini ekrana yazdırmak için
     for(let x=this.firstDayIndex;x>0;x--){
       this.days.push(new CalendarModel('prev', this.prevlastDay-x+1,new Date(this.date.getFullYear(),this.date.getMonth()-1, this.prevlastDay-x+1)))
-      // this.prevDays.push(this.prevlastDay-x+1)
     }
-    
+    //Bugünün tarihinini belirtmek için
     for(let i=1;i<=this.lastDay;i++){
-      // if(i === new Date().getDate() && this.date.getMonth() === new Date().getMonth()){
-
-      // }
-      this.days.push(new CalendarModel('now', i,new Date(this.date.getFullYear(),this.date.getMonth(),i)))
+      this.days.push(new CalendarModel('today', i,new Date(this.date.getFullYear(),this.date.getMonth(),i)))
     }
-
-      for(let j=1;j <= this.nextDays;j++){
+    //Sonraki ayın günlerini ekrana yazdırmak için
+    for(let j=1;j <= this.nextDays;j++){
         if (this.days.length % 7 > 0) {
-        this.days.push(new CalendarModel('after', j, new Date(this.date.getFullYear(),this.date.getMonth()+1,j)))
+          this.days.push(new CalendarModel('after', j, new Date(this.date.getFullYear(),this.date.getMonth()+1,j)))
       }
     }
   }
-
+  //Önceki aya gitmek için
   prevMonth(){
     this.date.setMonth(this.date.getMonth()-1);
     this.currentMonth = this.months[this.date.getMonth()]
     if(this.currentMonth === 'December' ){
       this.currentYear = this.date.getFullYear();
-
     }else{
       this.currentDay = new Date(this.date.getFullYear(),this.date.getMonth()+1,1).getDate()
-      
     }
     this.renderCalendar();
   }
-
+  //Sonraki aya gitmek için
   nextMonth(){
     this.date.setMonth(this.date.getMonth()+1);
     this.currentMonth = this.months[this.date.getMonth()]
     if(this.currentMonth === 'January' ){
       this.currentYear = this.date.getFullYear();
-      
     }else{
-      
-        this.currentDay = new Date(this.date.getFullYear(),this.date.getMonth()-1,1).getDate()
-      
+      this.currentDay = new Date(this.date.getFullYear(),this.date.getMonth()-1,1).getDate()
     }
     this.renderCalendar();
   }
 
-  
-
   onClicked(day:Date){
     this.selectedDate = day;
-    alert("You select " +new DatePipe('en').transform(day)  )
     this.change.emit(day);
   }
   

@@ -1,2 +1,3 @@
-<div appDirective>You select: {{date | date}}</div>
+<div class="today" style="color: #fff;">Today is {{ccurrentDate}} {{ccurrentMonth}}  {{ccurrentYear}}</div>
+<div  appDirective>You select: {{date | date}}</div>
 <app-calendar (change)=" this.date = $event"></app-calendar>

@@ -4,7 +4,8 @@
             <fa-icon (click)="prevMonth()" [icon]="faAngleLeft" class="prev"></fa-icon>
             <div class="date">
                 <h1>{{currentMonth}}</h1>
-                <p>{{currentDay}} {{currentMonth}}, {{currentYear}}</p>
+                <p>{{currentDay}} {{currentMonth}} {{currentYear}}</p>
+                <!-- <p>Selected Date: {{selectedDate | date}}</p> -->
             </div>
             <fa-icon (click)="nextMonth()" [icon]="faAngleRight" class="next"></fa-icon>
         </div>
@@ -18,16 +19,18 @@
             <div>Su</div>
         </div>
         
-        <div  (click)="onClicked(item.date)" class="days"
-        [class.prev]="item.type === 'prev'"
-            [class.now]="item.type === 'now'"
+        <div class="days"
+            (click)="onClicked(item.date)"
+            [class.prev]="item.type === 'prev'"
+            [class.now]="item.type === 'today'"
             [class.after]="item.type === 'after'"
             [class.today]="item.date === selectedDate"
-        *ngFor="let item of days">
-        {{item.day}}
+            *ngFor="let item of days">
+            {{item.day}}
         </div>
             
-            
+        
+        
             <!-- <div class="prev-date">27</div>
             <div class="prev-date">28</div>
             <div class="prev-date">29</div>
